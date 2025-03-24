@@ -1,5 +1,4 @@
 import 'dotenv/config';
-import { join } from 'path';
 
 // Simple test command
 const TEST_COMMAND = {
@@ -13,7 +12,6 @@ const TEST_COMMAND = {
 const ALL_COMMANDS = [TEST_COMMAND];
 
 async function installGlobalCommands(appId, commands)  {
-  console.log(`app id: ${appId}`)
   // API endpoint to overwrite global commands
   const endpoint = `applications/${appId}/commands`;
 
@@ -23,7 +21,6 @@ async function installGlobalCommands(appId, commands)  {
   } catch (err) {
     console.error(err);
   }
-
 }
 
 export async function DiscordRequest(endpoint, options) {

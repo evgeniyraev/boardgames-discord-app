@@ -6,6 +6,10 @@ this is a fun project to explore discord api
 
 a bot to ask the chat who want to play this weekend, and make a thread and/or event for it, after the weekend is over to close this thread
 
+## Working Bot
+
+the bot can be isntalled from here: https://discord.com/oauth2/authorize?client_id=1351181885379706940
+
 ## Usage
 
 to start the bot you need to create `.env` file containign

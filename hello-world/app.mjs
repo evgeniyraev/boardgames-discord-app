@@ -76,15 +76,32 @@ export let lambdaHandler = async (event) => {
 
       // "test" command
       if (name === 'test') {
+        const now = new Date();
+        const tenMinutesLater = new Date(now.getTime() + 10 * 60 * 1000); // 10 minutes in ms
+
+        let poll = {
+          question: {
+            text: "What’s your favorite fruit?"
+          },
+          answers: [
+            { answer_id: 0, text: "Apple" },
+            { answer_id: 1, text: "Banana" },
+            { answer_id: 2, text: "Grape" }
+          ],
+          duration: 1,
+          //expiry: tenMinutesLater.toISOString(),
+          allow_multiselect: true,
+          layout_type: 1
+        }
         // Send a message into the channel where command was triggered from
         return {
           statusCode: 200,
           body: JSON.stringify({
             type: InteractionResponseType.CHANNEL_MESSAGE_WITH_SOURCE,
             data: {
-              // Fetches a random emoji to send from a helper function
-              content: `server is working`,
-            },
+              content: "lets vote",
+              poll,
+            }
           })
         }
       }

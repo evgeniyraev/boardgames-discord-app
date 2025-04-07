@@ -16,11 +16,11 @@ to start the bot you need to create `.env` file containign
 
 ``` bash
 APP_ID=...
-DISCORD_TOKEN=...
+DISCORD_BOT_TOKEN=...
 PUBLIC_KEY=...
 ```
 
-`APP_ID` and `DISCORD_TOKEN` are used in `commands.js` to register the commands in discord in main direcotory
+`APP_ID` and `DISCORD_BOT_TOKEN` are used in `commands.js` to register the commands in discord in main direcotory
 
 `PUBLIC_KEY` is used the the endponts to authenticate the api in front of Discord in the app directory
 

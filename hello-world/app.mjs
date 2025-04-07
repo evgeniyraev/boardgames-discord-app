@@ -11,7 +11,6 @@
  * 
  */
 
-import 'dotenv/config'
 
 import {
   InteractionType,
@@ -22,6 +21,9 @@ import {
   verifyKey,
 } from 'discord-interactions';
 
+import { LambdaClient, InvokeCommand } from "@aws-sdk/client-lambda";
+
+const client = new LambdaClient({ region: "eu-central-1" }); // Set your region
 
 export let lambdaHandler = async (event) => {
 
@@ -63,7 +65,7 @@ export let lambdaHandler = async (event) => {
         body: JSON.stringify({
           type: InteractionResponseType.PONG
         })
-      }
+      }      
     }
 
     /**
@@ -71,38 +73,46 @@ export let lambdaHandler = async (event) => {
      * See https://discord.com/developers/docs/interactions/application-commands#slash-commands
      */
     if (type === InteractionType.APPLICATION_COMMAND) {
-      console.log(JSON.stringify(data, null, 4))
       const { name } = data;
 
       // "test" command
       if (name === 'test') {
-        const now = new Date();
-        const tenMinutesLater = new Date(now.getTime() + 10 * 60 * 1000); // 10 minutes in ms
+        const command = new InvokeCommand({
+          FunctionName: "SendMassage", // Logical name or full ARN
+          InvocationType: "Event", // 'RequestResponse' for sync, 'Event' for async
+          Payload: Buffer.from(JSON.stringify({ foo: "bar" }))
+        });
 
-        let poll = {
-          question: {
-            text: "What’s your favorite fruit?"
-          },
-          answers: [
-            { answer_id: 0, text: "Apple" },
-            { answer_id: 1, text: "Banana" },
-            { answer_id: 2, text: "Grape" }
-          ],
-          duration: 1,
-          //expiry: tenMinutesLater.toISOString(),
-          allow_multiselect: true,
-          layout_type: 1
-        }
-        // Send a message into the channel where command was triggered from
-        return {
-          statusCode: 200,
-          body: JSON.stringify({
-            type: InteractionResponseType.CHANNEL_MESSAGE_WITH_SOURCE,
-            data: {
-              content: "lets vote",
-              poll,
-            }
-          })
+        console.log("here")
+        try {
+          // Real AWS Lambda call
+          const response = await client.send(command);
+          // console.log("Invocation result:", response);
+
+          console.log("here 2")
+
+          return {
+            statusCode: 200,
+            body: JSON.stringify({
+              type: InteractionResponseType.CHANNEL_MESSAGE_WITH_SOURCE,
+              data: {
+                content: "lets vote",
+              }
+            })
+          }
+       
+        } catch (error) {
+          console.error("Error invoking function:", error);
+
+          return {
+            statusCode: 200,
+            body: JSON.stringify({
+              type: InteractionResponseType.CHANNEL_MESSAGE_WITH_SOURCE,
+              data: {
+                content: "error",
+              }
+            })
+          }
         }
       }
 
